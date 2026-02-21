@@ -1,0 +1,189 @@
+--// Ultra Modern UI
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local UIS = game:GetService("UserInputService")
+local LocalPlayer = Players.LocalPlayer
+
+-- ป้องกันซ้ำ
+if game.CoreGui:FindFirstChild("UltraUI") then
+	game.CoreGui.UltraUI:Destroy()
+end
+
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "UltraUI"
+ScreenGui.Parent = game.CoreGui
+ScreenGui.ResetOnSpawn = false
+
+-- ปุ่มเปิดแบบวงกลมลอย
+local ToggleButton = Instance.new("TextButton", ScreenGui)
+ToggleButton.Size = UDim2.new(0,60,0,60)
+ToggleButton.Position = UDim2.new(0,30,0.5,-30)
+ToggleButton.Text = "≡"
+ToggleButton.TextScaled = true
+ToggleButton.Font = Enum.Font.GothamBold
+ToggleButton.TextColor3 = Color3.fromRGB(0,255,255)
+ToggleButton.BackgroundColor3 = Color3.fromRGB(20,20,20)
+ToggleButton.BorderSizePixel = 0
+
+local ToggleCorner = Instance.new("UICorner", ToggleButton)
+ToggleCorner.CornerRadius = UDim.new(1,0)
+
+local ToggleStroke = Instance.new("UIStroke", ToggleButton)
+ToggleStroke.Color = Color3.fromRGB(0,255,255)
+ToggleStroke.Thickness = 2
+
+-- Main Frame
+local Main = Instance.new("Frame", ScreenGui)
+Main.Size = UDim2.new(0,550,0,380)
+Main.Position = UDim2.new(0.5,-275,0.5,-190)
+Main.BackgroundColor3 = Color3.fromRGB(25,25,25)
+Main.Visible = false
+Main.BorderSizePixel = 0
+
+local Corner = Instance.new("UICorner", Main)
+Corner.CornerRadius = UDim.new(0,18)
+
+local Stroke = Instance.new("UIStroke", Main)
+Stroke.Color = Color3.fromRGB(0,255,255)
+Stroke.Thickness = 1.5
+
+-- เงา
+local Shadow = Instance.new("ImageLabel", Main)
+Shadow.Size = UDim2.new(1,60,1,60)
+Shadow.Position = UDim2.new(0,-30,0,-30)
+Shadow.Image = "rbxassetid://1316045217"
+Shadow.ImageTransparency = 0.7
+Shadow.BackgroundTransparency = 1
+Shadow.ZIndex = 0
+
+-- Title
+local Title = Instance.new("TextLabel", Main)
+Title.Size = UDim2.new(1,0,0,50)
+Title.BackgroundTransparency = 1
+Title.Text = "IG:ezmxyxi"
+Title.Font = Enum.Font.GothamBold
+Title.TextSize = 22
+Title.TextColor3 = Color3.fromRGB(0,255,255)
+
+-- ปุ่มปิด
+local Close = Instance.new("TextButton", Main)
+Close.Size = UDim2.new(0,35,0,35)
+Close.Position = UDim2.new(1,-45,0,10)
+Close.Text = "X"
+Close.Font = Enum.Font.GothamBold
+Close.TextScaled = true
+Close.BackgroundColor3 = Color3.fromRGB(40,0,0)
+Close.TextColor3 = Color3.new(1,1,1)
+Close.BorderSizePixel = 0
+
+local CloseCorner = Instance.new("UICorner", Close)
+CloseCorner.CornerRadius = UDim.new(1,0)
+
+-- ลากได้
+local dragging, dragStart, startPos
+
+Main.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		dragging = true
+		dragStart = input.Position
+		startPos = Main.Position
+	end
+end)
+
+UIS.InputChanged:Connect(function(input)
+	if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+		local delta = input.Position - dragStart
+		Main.Position = UDim2.new(
+			startPos.X.Scale,
+			startPos.X.Offset + delta.X,
+			startPos.Y.Scale,
+			startPos.Y.Offset + delta.Y
+		)
+	end
+end)
+
+UIS.InputEnded:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		dragging = false
+	end
+end)
+
+-- Animation เปิด
+local function openUI()
+	Main.Visible = true
+	Main.Size = UDim2.new(0,0,0,0)
+	TweenService:Create(Main,TweenInfo.new(0.3,Enum.EasingStyle.Quad),{
+		Size = UDim2.new(0,550,0,380)
+	}):Play()
+end
+
+local function closeUI()
+	local tween = TweenService:Create(Main,TweenInfo.new(0.2,Enum.EasingStyle.Quad),{
+		Size = UDim2.new(0,0,0,0)
+	})
+	tween:Play()
+	tween.Completed:Wait()
+	Main.Visible = false
+end
+
+ToggleButton.MouseButton1Click:Connect(function()
+	if Main.Visible then
+		closeUI()
+	else
+		openUI()
+	end
+end)
+
+--// TELEPORT SYSTEM
+
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+-- กล่องเลือกผู้เล่น
+local PlayerBox = Instance.new("TextBox", Main)
+PlayerBox.Size = UDim2.new(0,220,0,40)
+PlayerBox.Position = UDim2.new(0.5,-110,0.6,0)
+PlayerBox.PlaceholderText = "มึงจะวาปหาใครมึงก็พิมพ์ไอควาย บอดอ..."
+PlayerBox.Text = ""
+PlayerBox.Font = Enum.Font.Gotham
+PlayerBox.TextScaled = true
+PlayerBox.BackgroundColor3 = Color3.fromRGB(35,35,35)
+PlayerBox.TextColor3 = Color3.new(1,1,1)
+PlayerBox.BorderSizePixel = 0
+
+local BoxCorner = Instance.new("UICorner", PlayerBox)
+BoxCorner.CornerRadius = UDim.new(0,10)
+
+-- ปุ่มเทเลพอร์ต
+local TPButton = Instance.new("TextButton", Main)
+TPButton.Size = UDim2.new(0,220,0,45)
+TPButton.Position = UDim2.new(0.5,-110,0.6,50)
+TPButton.Text = "เขียนชื่อจริงน่ะจ๊ะไอควาย"
+TPButton.Font = Enum.Font.GothamBold
+TPButton.TextScaled = true
+TPButton.BackgroundColor3 = Color3.fromRGB(0,120,255)
+TPButton.TextColor3 = Color3.new(1,1,1)
+TPButton.BorderSizePixel = 0
+
+local TPCorner = Instance.new("UICorner", TPButton)
+TPCorner.CornerRadius = UDim.new(0,12)
+
+-- ฟังก์ชันหา Player
+local function getPlayerByName(name)
+	for _, player in ipairs(Players:GetPlayers()) do
+		if string.find(string.lower(player.Name), string.lower(name)) then
+			return player
+		end
+	end
+end
+
+-- กดแล้วเทเลพอร์ต
+TPButton.MouseButton1Click:Connect(function()
+	local target = getPlayerByName(PlayerBox.Text)
+
+	if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
+		LocalPlayer.Character.HumanoidRootPart.CFrame =
+			target.Character.HumanoidRootPart.CFrame * CFrame.new(0,0,-3)
+	end
+end)
