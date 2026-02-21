@@ -57,7 +57,7 @@ MainFrame.Visible = false
 -- ====== PRO KEY UI ======
 local RunService = game:GetService("RunService")
 
-local correctKey = "ezmxixy1992"
+local correctKey = "TextBox"
 
 -- Background Blur
 local blur = Instance.new("BlurEffect")
